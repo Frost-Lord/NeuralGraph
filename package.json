@@ -1,20 +1,20 @@
 {
-  "name": "neuralview",
+  "name": "NeuralView",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@tensorflow/tfjs-node": "^4.8.0",
-    "body-parser": "^1.20.2",
-    "child_process": "^1.0.2",
-    "cors": "^2.8.5",
-    "http": "^0.0.1-security",
-    "socket.io": "^4.7.1",
-    "socket.io-client": "^4.7.1"
+    "axios": "^1.4.0",
+    "ejs": "^3.1.9",
+    "electron": "^25.2.0",
+    "express": "^4.18.2",
+    "path": "^0.12.7"
   }
 }

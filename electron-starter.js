@@ -73,9 +73,7 @@ appExpress.get('/data', (req, res) => {
 });
   
 
-appExpress.listen(3001, () => {
-  console.log('Express and Socket.IO server started on port 3001');
-});
+appExpress.listen(3001, () => {});
 
 module.exports = {
   startElectronApp,
