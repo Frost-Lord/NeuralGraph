@@ -30,21 +30,24 @@ Follow these steps to set up NeuralGraph:
 4. Update your model.fit callback:
    ```js
    callbacks: {
-    onEpochEnd: async (epoch, logs) => {
-         console.log(`Epoch: ${epoch} Loss: ${logs.loss * 100} Accuracy: ${logs.acc}`);
-         updateGraph(epoch, logs.loss, logs.acc, epochData);
-      }
+     onEpochEnd: async (epoch, logs) => {
+       console.log(
+         `Epoch: ${epoch} Loss: ${logs.loss * 100} Accuracy: ${logs.acc}`
+       );
+       updateGraph(epoch, logs.loss, logs.acc, epochData);
+     };
    }
-  ```
+   ```
 
 ## Usage
 
 To run NeuralGraph:
 
 1. Start the development server:
-   ```shell
-   npm start
-   ```
+ ```shell
+ npm start
+````
+
 2. Open your web browser and navigate to `http://localhost:3001` to access NeuralGraph.
 
 ## Data Format
@@ -64,6 +67,7 @@ Example data format:
 ```
 
 ## Contributing
+
 Contributions are welcome! To contribute to NeuralGraph, follow these steps:
 
 1. Fork the repository.
