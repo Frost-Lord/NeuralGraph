@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Training Data</title>
+  <% include('navbar'); %>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="row">
+    <div class="parent">
+      <div class="div1">
+        <div class="chart-container">
+          <canvas id="lossChart" width="200" height="200"></canvas>
+        </div>
+      </div>
+      <div class="div2">
+        <div class="chart-container">
+          <canvas id="accuracyChart" width="200" height="200"></canvas>
+        </div>
+      </div>
+      <div class="full-width">
+        <div class="feedback-container">
+          <div class="feedback-title">Training Feedback:</div>
+          <div id="successMessage" style="display: none;"></div>
+          <div id="feedbackMessage" class="feedback-message"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function renderCharts(data) {
+      let lossData = data.lossData;
+      let accuracyData = data.accuracyData;
+
+      var ctxLoss = document.getElementById('lossChart').getContext('2d');
+      var ctxAccuracy = document.getElementById('accuracyChart').getContext('2d');
+      new Chart(ctxLoss, {
+        type: 'line',
+        data: {
+          datasets: [{
+            label: 'Loss',
+            data: lossData || [],
+            fill: false,
+            borderColor: 'rgba(91, 239, 255)',
+            backgroundColor: 'rgba(91, 239, 255)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                display: true,
+                color: 'rgba(89, 80, 80, 0.72)' // Light grey grid
+              },
+              title: {
+                display: true,
+                text: 'Loss',
+              },
+            },
+            x: {
+              type: 'linear',
+              min: 0,
+              max: 100,
+              grid: {
+                display: true,
+                color: 'rgba(89, 80, 80, 0.72)' // Light grey grid
+              },
+              title: {
+                display: true,
+                text: 'Epoch',
+              },
+            },
+          },
+          plugins: {
+            legend: {
+              display: false,
+            },
+            title: {
+              display: false,
+            },
+          },
+          layout: {
+            backgroundColor: 'rgba(255, 255, 255, 1)', // White background
+          },
+        }
+      });
+
+      new Chart(ctxAccuracy, {
+        type: 'line',
+        data: {
+          datasets: [{
+            label: 'Accuracy',
+            data: accuracyData || [],
+            fill: false,
+            borderColor: 'rgba(91, 239, 255)',
+            backgroundColor: 'rgba(91, 239, 255)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                display: true,
+                color: 'rgba(89, 80, 80, 0.72)' // Light grey grid
+              },
+              title: {
+                display: true,
+                text: 'Accuracy',
+              },
+            },
+            x: {
+              type: 'linear',
+              min: 0,
+              max: 100,
+              grid: {
+                display: true,
+                color: 'rgba(89, 80, 80, 0.72)' // Light grey grid
+              },
+              title: {
+                display: true,
+                text: 'Epoch',
+              },
+            },
+          },
+          plugins: {
+            legend: {
+              display: false,
+            },
+            title: {
+              display: false,
+            },
+          },
+          layout: {
+            backgroundColor: 'rgba(255, 255, 255, 1)', // White background
+          },
+        }
+      });
+
+      let averageAccuracy;
+      if (accuracyData.length > 0) {
+        const sumAccuracy = accuracyData.reduce((sum, value) => sum + value, 0);
+        averageAccuracy = sumAccuracy / accuracyData.length;
+      } else {
+        averageAccuracy = 0;
+      }
+      const feedbackMessage = document.getElementById('feedbackMessage');
+      if (averageAccuracy >= 0.8) {
+        feedbackMessage.innerHTML = `<span style="color: green;">AI training was successful!</span><br><br>`;
+      } else {
+        feedbackMessage.innerHTML = `<span style="color: red;">AI training was not satisfactory.</span><br><br>`;
+      }
+      feedbackMessage.innerHTML += `<strong>Average Accuracy:</strong> ${averageAccuracy.toFixed(2)}<br>`;
+      feedbackMessage.innerHTML += `<strong>Epochs:</strong> ${data.epochs}`;
+    }
+
+    window.onload = async function () {
+      try {
+        const res = await axios.get('http://127.0.0.1:3001/data');
+        const data = res.data;
+
+        renderCharts(data);
+
+        document.getElementById('successMessage').style.display = 'block';
+      } catch (error) {
+        document.getElementById('successMessage').innerText = 'Error: ' + error.message;
+        document.getElementById('successMessage').style.display = 'block';
+        console.error('Error fetching data:', error);
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #202534;
+      color: #ffffff;
+    }
+
+    .container {
+      margin-top: 50px;
+    }
+
+    .chart-container {
+      width: 90%;
+      float: left;
+      padding: 20px;
+    }
+
+    .feedback-container {
+      clear: both;
+      padding: 20px;
+      border: 1px solid #ffffff;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .feedback-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .feedback-message {
+      font-size: 18px;
+    }
+
+    .parent {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      grid-column-gap: 0px;
+      grid-row-gap: 0px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .div1 {
+      grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .div2 {
+      grid-area: 1 / 2 / 2 / 3;
+    }
+
+    .full-width {
+      grid-area: 2 / 1 / 3 / 3;
+    }
+  </style>
+</body>
+
+</html>

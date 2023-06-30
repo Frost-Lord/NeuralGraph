@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+  <nav class="navbar">
+    <ul>
+      <li><a href="/">Section 1</a></li>
+      <li><a href="/">Section 2</a></li>
+      <li><a href="/">Section 3</a></li>
+      <li><a href="/">Section 4</a></li>
+    </ul>
+  </nav>
+  <br><br>
+
+  <script>
+    const navbarLinks = document.querySelectorAll('.navbar a');
+
+    navbarLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+
+      });
+    });
+  </script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+  
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #191d29;
+        padding: 10px 20px;
+        box-sizing: border-box;
+        z-index: 999;
+      }
+  
+      .navbar ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+      }
+  
+      .navbar li {
+        margin-right: 20px;
+      }
+  
+      .navbar a {
+        text-decoration: none;
+        color: #ffffff;
+        font-size: 18px;
+        transition: color 0.3s ease;
+      }
+  
+      .navbar a:hover {
+        color: #1c1b6d;
+      }
+    </style>
+</body>
+</html>

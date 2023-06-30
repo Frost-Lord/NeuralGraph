@@ -1,0 +1,20 @@
+{
+  "name": "NeuralView",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "ejs": "^3.1.9",
+    "electron": "^25.2.0",
+    "express": "^4.18.2",
+    "path": "^0.12.7"
+  }
+}
