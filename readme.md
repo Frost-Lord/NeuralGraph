@@ -15,18 +15,27 @@ NeuralGraph is an AI training data visualization tool that helps analyze and int
 
 Follow these steps to set up NeuralGraph:
 
-1. Clone the repository:
+1. Install:
    ```shell
-   git clone https://github.com/Frost-Lord/NeuralGraph.git
+   npm i neuralgraph
    ```
-2. Open the project directory:
-   ```shell
-   cd NeuralGraph
+2. Call needed functions:
+   ```js
+   const { GenerateGraph, updateGraph } = require("neuralgraph");
    ```
-3. Install the required dependencies:
-   ```shell
-   npm install
+3. Call this just before model.fit
+   ```js
+   GenerateGraph();
    ```
+4. Update your model.fir callback:
+   ```js
+   callbacks: {
+    onEpochEnd: async (epoch, logs) => {
+         console.log(`Epoch: ${epoch} Loss: ${logs.loss * 100} Accuracy: ${logs.acc}`);
+         updateGraph(epoch, logs.loss, logs.acc, epochData);
+      }
+   }
+  ```
 
 ## Usage
 
