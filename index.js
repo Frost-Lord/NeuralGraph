@@ -51,14 +51,14 @@ function GenerateGraph() {
   });
 }
 
-function updateGraph(epoch, logs, accuracy) {
+function updateGraph(epoch, logs) {
   lossData.push({ x: epoch, y: logs.loss * 100 });
-  accuracyData.push({ x: epoch, y: accuracy.acc });
+  accuracyData.push({ x: epoch, y: logs.acc });
 
   Data = {
     epoch: epoch,
     loss: logs.loss,
-    accuracy: accuracy.acc,
+    accuracy: logs.acc,
     lossData: lossData,
     accuracyData: accuracyData,
   };

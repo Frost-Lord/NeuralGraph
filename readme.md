@@ -34,7 +34,7 @@ Follow these steps to set up NeuralGraph:
        console.log(
          `Epoch: ${epoch} Loss: ${logs.loss * 100} Accuracy: ${logs.acc}`
        );
-      updateGraph(epoch, logs, logs);
+      updateGraph(epoch, logs);
      };
    }
    ```
@@ -86,7 +86,7 @@ model.fit(xs, ys, {
   callbacks: {
     onEpochEnd: async (epoch, logs) => {
       console.log(`Epoch: ${epoch} Loss: ${logs.loss * 100} Accuracy: ${logs.acc}`);
-      updateGraph(epoch, logs, logs);
+      updateGraph(epoch, logs);
     }
   }
 });
