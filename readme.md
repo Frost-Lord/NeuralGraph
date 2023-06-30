@@ -27,7 +27,7 @@ Follow these steps to set up NeuralGraph:
    ```js
    GenerateGraph();
    ```
-4. Update your model.fir callback:
+4. Update your model.fit callback:
    ```js
    callbacks: {
     onEpochEnd: async (epoch, logs) => {
