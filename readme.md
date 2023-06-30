@@ -23,7 +23,7 @@ Follow these steps to set up NeuralGraph:
    ```js
    const { GenerateGraph, updateGraph } = require("neuralgraph");
    ```
-3. Call this just before model.fit
+3. Call this just before model.fit:
    ```js
    GenerateGraph();
    ```
