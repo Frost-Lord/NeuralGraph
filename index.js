@@ -8,7 +8,7 @@ model.compile({ loss: 'meanSquaredError', optimizer: 'sgd', metrics: ['accuracy'
 const xs = tf.tensor2d([-1, 0, 1, 2, 3, 4], [6, 1]);
 const ys = tf.tensor2d([-3, -1, 1, 3, 5, 7], [6, 1]);
 
-const startAppPromise = GenerateGraph();
+GenerateGraph();
 
 const epochData = [];
 
@@ -21,11 +21,3 @@ model.fit(xs, ys, {
     }
   }
 });
-
-startAppPromise
-  .then(() => {
-    console.log('Electron app closed');
-  })
-  .catch((err) => {
-    console.error('Error running Electron app:', err);
-  });
