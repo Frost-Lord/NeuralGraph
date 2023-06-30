@@ -1,8 +1,8 @@
-# NeuroGraph
+# NeuralGraph
 
-NeuroGraph is an AI training data visualization tool that helps analyze and interpret training data for neural networks. It provides visualizations of loss and accuracy trends over epochs, allowing users to gain insights into the training process and assess the model's performance. When you call it simply create a popup app displaying the data.
+NeuralGraph is an AI training data visualization tool that helps analyze and interpret training data for neural networks. It provides visualizations of loss and accuracy trends over epochs, allowing users to gain insights into the training process and assess the model's performance. When you call it simply create a popup app displaying the data.
 
-![NeuroGraph Preview](./npm//images/img.png)
+![NeuralGraph Preview](./npm//images/img.png)
 
 ## Features
 
@@ -13,15 +13,15 @@ NeuroGraph is an AI training data visualization tool that helps analyze and inte
 
 ## Installation
 
-Follow these steps to set up NeuroGraph:
+Follow these steps to set up NeuralGraph:
 
 1. Clone the repository:
    ```shell
-   git clone https://github.com/Frost-Lord/NeuroGraph.git
+   git clone https://github.com/Frost-Lord/NeuralGraph.git
    ```
 2. Open the project directory:
    ```shell
-   cd NeuroGraph
+   cd NeuralGraph
    ```
 3. Install the required dependencies:
    ```shell
@@ -30,17 +30,17 @@ Follow these steps to set up NeuroGraph:
 
 ## Usage
 
-To run NeuroGraph:
+To run NeuralGraph:
 
 1. Start the development server:
    ```shell
    npm start
    ```
-2. Open your web browser and navigate to `http://localhost:3001` to access NeuroGraph.
+2. Open your web browser and navigate to `http://localhost:3001` to access NeuralGraph.
 
 ## Data Format
 
-NeuroGraph expects training data in a specific format:
+NeuralGraph expects training data in a specific format:
 
 - `lossData`: An array of loss values corresponding to each epoch.
 - `accuracyData`: An array of accuracy values corresponding to each epoch.
@@ -55,7 +55,7 @@ Example data format:
 ```
 
 ## Contributing
-Contributions are welcome! To contribute to NeuroGraph, follow these steps:
+Contributions are welcome! To contribute to NeuralGraph, follow these steps:
 
 1. Fork the repository.
 2. Create a new branch for your feature or bug fix.

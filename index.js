@@ -23,7 +23,7 @@ let accuracyData = [];
 
 function startElectronApp() {
   return new Promise((resolve, reject) => {
-    const electronProcess = exec('electron npm/main.js');
+    const electronProcess = exec('electron node_modules/NeuralGraph/window.js');
 
     electronProcess.stdout.on('data', (data) => {
       console.log(data);
