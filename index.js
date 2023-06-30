@@ -34,12 +34,12 @@ function startElectronApp() {
     });
 
     electronProcess.on('close', (code) => {
-      console.log(`Electron app exited with code ${code}`);
+      //console.log(`App exited with code ${code}`);
       resolve();
     });
 
     electronProcess.on('error', (err) => {
-      console.error('Failed to start Electron app:', err);
+      console.error('Failed to start app:', err);
       reject(err);
     });
   });
@@ -51,14 +51,14 @@ function GenerateGraph() {
   });
 }
 
-function updateGraph(epoch, loss, accuracy) {
-  lossData.push({ x: epoch, y: loss * 100 });
-  accuracyData.push({ x: epoch, y: accuracy });
+function updateGraph(epoch, logs, accuracy) {
+  lossData.push({ x: epoch, y: logs.loss * 100 });
+  accuracyData.push({ x: epoch, y: accuracy.acc });
 
   Data = {
     epoch: epoch,
-    loss: loss,
-    accuracy: accuracy,
+    loss: logs.loss,
+    accuracy: accuracy.acc,
     lossData: lossData,
     accuracyData: accuracyData,
   };

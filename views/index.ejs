@@ -35,6 +35,7 @@
     function renderCharts(data) {
       let lossData = data.lossData;
       let accuracyData = data.accuracyData;
+      let epochlength = data.epoch;
 
       var ctxLoss = document.getElementById('lossChart').getContext('2d');
       var ctxAccuracy = document.getElementById('accuracyChart').getContext('2d');
@@ -66,7 +67,7 @@
             x: {
               type: 'linear',
               min: 0,
-              max: 100,
+              max: epochlength,
               grid: {
                 display: true,
                 color: 'rgba(89, 80, 80, 0.72)' // Light grey grid
@@ -119,7 +120,7 @@
             x: {
               type: 'linear',
               min: 0,
-              max: 100,
+              max: epochlength,
               grid: {
                 display: true,
                 color: 'rgba(89, 80, 80, 0.72)' // Light grey grid

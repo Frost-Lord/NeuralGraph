@@ -70,7 +70,7 @@ Example data format:
 
 ```js
 const tf = require('@tensorflow/tfjs-node');
-const { GenerateGraph, updateGraph } = require("neuralgraph");
+const { GenerateGraph, updateGraph } = require('neuralgraph');
 
 const model = tf.sequential();
 model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
@@ -81,14 +81,12 @@ const ys = tf.tensor2d([-3, -1, 1, 3, 5, 7], [6, 1]);
 
 GenerateGraph();
 
-const epochData = [];
-
 model.fit(xs, ys, {
   epochs: 100,
   callbacks: {
     onEpochEnd: async (epoch, logs) => {
       console.log(`Epoch: ${epoch} Loss: ${logs.loss * 100} Accuracy: ${logs.acc}`);
-      updateGraph(epoch, logs.loss, logs.acc, epochData);
+      updateGraph(epoch, logs, logs);
     }
   }
 });
