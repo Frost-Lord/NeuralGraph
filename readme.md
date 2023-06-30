@@ -34,7 +34,7 @@ Follow these steps to set up NeuralGraph:
        console.log(
          `Epoch: ${epoch} Loss: ${logs.loss * 100} Accuracy: ${logs.acc}`
        );
-       updateGraph(epoch, logs.loss, logs.acc, epochData);
+      updateGraph(epoch, logs, logs);
      };
    }
    ```
