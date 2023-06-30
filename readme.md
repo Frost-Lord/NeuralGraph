@@ -33,9 +33,9 @@ Follow these steps to set up NeuroGraph:
 To run NeuroGraph:
 
 1. Start the development server:
-   \```shell
+   ```shell
    npm start
-   \```
+   ```
 2. Open your web browser and navigate to `http://localhost:3001` to access NeuroGraph.
 
 ## Data Format
