@@ -2,7 +2,7 @@
 
 NeuralGraph is an AI training data visualization tool that helps analyze and interpret training data for neural networks. It provides visualizations of loss and accuracy trends over epochs, allowing users to gain insights into the training process and assess the model's performance. When you call it simply create a popup app displaying the data.
 
-![NeuralGraph Preview](./npm//images/img.png)
+![NeuralGraph Preview](./images/img.png)
 
 ## Features
 
