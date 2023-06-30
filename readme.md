@@ -2,7 +2,7 @@
 
 NeuroGraph is an AI training data visualization tool that helps analyze and interpret training data for neural networks. It provides visualizations of loss and accuracy trends over epochs, allowing users to gain insights into the training process and assess the model's performance.
 
-![NeuroGraph Preview](neurograph-preview.png)
+![NeuroGraph Preview](./npm//images/img.png)
 
 ## Features
 
@@ -17,7 +17,7 @@ Follow these steps to set up NeuroGraph:
 
 1. Clone the repository:
    \```shell
-   git clone https://github.com/your-username/NeuroGraph.git
+   git clone https://github.com/Frost-Lord/NeuroGraph.git
    \```
 2. Open the project directory:
    \```shell
