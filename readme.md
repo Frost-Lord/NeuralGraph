@@ -16,17 +16,17 @@ NeuroGraph is an AI training data visualization tool that helps analyze and inte
 Follow these steps to set up NeuroGraph:
 
 1. Clone the repository:
-   \```shell
+   ```shell
    git clone https://github.com/Frost-Lord/NeuroGraph.git
-   \```
+   ```
 2. Open the project directory:
-   \```shell
+   ```shell
    cd NeuroGraph
-   \```
+   ```
 3. Install the required dependencies:
-   \```shell
+   ```shell
    npm install
-   \```
+   ```
 
 ## Usage
 
