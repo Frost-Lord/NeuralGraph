@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <div class="row">
+  <div class="grid-container">
     <div class="parent">
       <div class="div1">
         <div class="chart-container">
@@ -26,7 +26,12 @@
           <div class="feedback-title">Training Feedback:</div>
           <div id="successMessage" style="display: none;"></div>
           <div id="feedbackMessage" class="feedback-message"></div>
+          <br>
+          <div id="modelSummary" class="model-summary" style="display: none;"></div>
+          <div id="layerVisualization" class="layer-visualization" style="display: none;"></div>
         </div>
+      </div>
+      <div id="evaluationMetrics" class="evaluation-metrics" style="display: none; width: 100%; grid-column: 1 / -1;">
       </div>
     </div>
   </div>
@@ -36,6 +41,7 @@
       let lossData = data.lossData;
       let accuracyData = data.accuracyData;
       let epochlength = data.epoch;
+      let model = data.model;
 
       var ctxLoss = document.getElementById('lossChart').getContext('2d');
       var ctxAccuracy = document.getElementById('accuracyChart').getContext('2d');
@@ -144,22 +150,99 @@
           },
         }
       });
-
-      let averageAccuracy;
-      if (accuracyData.length > 0) {
-        const sumAccuracy = accuracyData.reduce((sum, value) => sum + value, 0);
-        averageAccuracy = sumAccuracy / accuracyData.length;
-      } else {
-        averageAccuracy = 0;
-      }
       const feedbackMessage = document.getElementById('feedbackMessage');
-      if (averageAccuracy >= 0.8) {
+
+      const recentLossData = lossData[lossData.length - 1].y;
+      if (recentLossData <= 20) {
         feedbackMessage.innerHTML = `<span style="color: green;">AI training was successful!</span><br><br>`;
       } else {
-        feedbackMessage.innerHTML = `<span style="color: red;">AI training was not satisfactory.</span><br><br>`;
+        feedbackMessage.innerHTML = `<span style="color: red;">AI training was not satisfactory. Loss: ${recentLossData.toFixed(2)}</span><br><br>`;
       }
-      feedbackMessage.innerHTML += `<strong>Average Accuracy:</strong> ${averageAccuracy.toFixed(2)}<br>`;
-      feedbackMessage.innerHTML += `<strong>Epochs:</strong> ${data.epochs}`;
+
+      const lastAccuracyData = accuracyData[accuracyData.length - 1].y;
+      const goodAccuracy = lastAccuracyData >= 0.8 ? `Good (${lastAccuracyData.toFixed(2)})` : `Bad (${lastAccuracyData.toFixed(2)})`;
+
+      feedbackMessage.innerHTML += `<strong>Accuracy:</strong> ${goodAccuracy}<br>`;
+      feedbackMessage.innerHTML += `<strong>Training Time:</strong> ${formatTrainingTime(data.trainingTime * 100)}<br>`;
+      feedbackMessage.innerHTML += `<strong>Epochs:</strong> ${data.epoch + 1}`;
+
+      if (data.model) {
+        const modelSummaryElement = document.getElementById('modelSummary');
+        const layerVisualizationElement = document.getElementById('layerVisualization');
+        const evaluationMetrics = document.getElementById('evaluationMetrics');
+
+        modelSummaryElement.style.display = 'block';
+        layerVisualizationElement.style.display = 'block';
+        evaluationMetrics.style.display = 'block';
+
+        const modelConfigHTML = (modelInfo) => {
+          let tableRows = '';
+          modelInfo.config.layers.forEach(layer => {
+            let configRows = '';
+            for (let property in layer.config) {
+              let value = layer.config[property];
+              if (typeof value === 'object' && value !== null) {
+                let subRows = '';
+                for (let subProp in value) {
+                  subRows += `<tr><td>${subProp}</td><td>${JSON.stringify(value[subProp], null, 2)}</td></tr>`;
+                }
+                value = `<table>${subRows}</table>`;
+              }
+              configRows += `<tr><td>${property}</td><td>${value}</td></tr>`;
+            }
+
+            tableRows += `
+                <tr>
+                    <td>${layer.className}</td>
+                    <td>
+                        <table>
+                            ${configRows}
+                        </table>
+                    </td>
+                </tr>
+            `;
+          });
+
+          return `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Class Name</th>
+                        <th>Config</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${tableRows}
+                </tbody>
+            </table>
+        `;
+        };
+        evaluationMetrics.innerHTML = `<div class="feedback-title">Model Config:</div>${modelConfigHTML(data.ModelInfo)}`;
+      }
+
+    }
+
+    function formatTrainingTime(seconds) {
+      if (seconds < 1) {
+        return `${(seconds * 1000).toFixed(2)}ms`;
+      } else if (seconds < 60) {
+        return `${seconds.toFixed(2)}s`;
+      } else if (seconds < 3600) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = (seconds % 60).toFixed(2);
+        return `${minutes} min ${remainingSeconds}s`;
+      } else if (seconds < 86400) {
+        const hours = Math.floor(seconds / 3600);
+        const remainingMinutes = Math.floor((seconds % 3600) / 60);
+        const remainingSeconds = (seconds % 60).toFixed(2);
+        return `${hours}hr ${remainingMinutes}min ${remainingSeconds}s`;
+      } else {
+        const days = Math.floor(seconds / 86400);
+        const remainingHours = Math.floor((seconds % 86400) / 3600);
+        const remainingMinutes = Math.floor((seconds % 3600) / 60);
+        const remainingSeconds = (seconds % 60).toFixed(2);
+        return `${days} day ${remainingHours}hr ${remainingMinutes}min ${remainingSeconds}s`;
+      }
     }
 
     window.onload = async function () {
@@ -183,6 +266,35 @@
       color: #ffffff;
     }
 
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #000000;
+    }
+
+    td {
+      background-color: #f2f2f2;
+      color: #000000;
+    }
+
+    tr:nth-child(even) {
+      background-color: #ddd;
+    }
+
+    tr:hover {
+      background-color: #b8daff;
+    }
+
     .container {
       margin-top: 50px;
     }
@@ -195,10 +307,11 @@
 
     .feedback-container {
       clear: both;
-      padding: 20px;
+      padding: 10px 20px;
       border: 1px solid #ffffff;
       background-color: rgba(255, 255, 255, 0.1);
     }
+
 
     .feedback-title {
       font-size: 24px;
@@ -208,6 +321,12 @@
 
     .feedback-message {
       font-size: 18px;
+    }
+
+    .grid-container {
+      display: flex;
+      justify-content: center;
+      width: 100%;
     }
 
     .parent {
@@ -231,18 +350,6 @@
     .full-width {
       grid-area: 2 / 1 / 3 / 3;
     }
-
-    ::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: #202534;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #888;
-}
   </style>
 </body>
 

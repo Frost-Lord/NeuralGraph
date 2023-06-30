@@ -11,15 +11,19 @@ appExpress.use(bodyParser.json());
 appExpress.use(cors());
 
 let Data = {
-    epoch: null,
-    loss: null,
-    accuracy: null,
-    lossData: null,
-    accuracyData: null,
+  epoch: null,
+  loss: null,
+  accuracy: null,
+  lossData: null,
+  accuracyData: null,
+  trainingTime: null,
+  model: null,
+  ModelInfo: null,
 }
 
 let lossData = [];
 let accuracyData = [];
+let startTime = null;
 
 function startElectronApp() {
   return new Promise((resolve, reject) => {
@@ -45,7 +49,10 @@ function startElectronApp() {
     });
   });
 }
-function GenerateGraph() {
+function GenerateGraph(model = null) {
+  if (model) {
+    Data.model = model;
+  }
   return new Promise((resolve) => {
     startElectronApp();
     resolve();
@@ -56,12 +63,25 @@ function updateGraph(epoch, logs) {
   lossData.push({ x: epoch, y: logs.loss * 100 });
   accuracyData.push({ x: epoch, y: logs.acc });
 
+  const endTime = Date.now();
+  let trainingTime;
+
+  if (startTime === null) {
+    startTime = endTime;
+    trainingTime = 0;
+  } else {
+    trainingTime = ((endTime - startTime) / 1000).toFixed(2);
+  }
+
   Data = {
     epoch: epoch,
     loss: logs.loss,
     accuracy: logs.acc,
     lossData: lossData,
     accuracyData: accuracyData,
+    trainingTime: trainingTime,
+    model: Data.model,
+    ModelInfo: Data.ModelInfo,
   };
 }
 
@@ -69,12 +89,39 @@ appExpress.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'loading.html'));
 });
 
-appExpress.get('/data', (req, res) => {
-    res.json(Data);
-});
-  
+function getLayerVisualization(model) {
+  const layerVisualizations = model.layers.map((layer) => {
+    const weights = layer.getWeights();
+    const weightsArrayPromises = weights.map(tensor => tensor.array());
 
-appExpress.listen(3001, () => {});
+    return Promise.all(weightsArrayPromises).then(weightsArray => {
+      return {
+        layerName: layer.name,
+        weights: weightsArray,
+      };
+    });
+  });
+  return Promise.all(layerVisualizations);
+}
+function getModelInfo(model) {
+  const config = model.getConfig();
+  const layerVisualizationPromise = getLayerVisualization(model);
+  return layerVisualizationPromise.then(layerVisualizations => {
+    return {
+      config,
+      layerVisualizations,
+    };
+  });
+}
+appExpress.get('/data', async (req, res) => {
+  if (Data.model) {
+    Data.ModelInfo = await getModelInfo(Data.model);
+  }
+  res.json(Data);
+});
+
+
+appExpress.listen(3001, () => { });
 
 module.exports = {
   startElectronApp,

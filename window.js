@@ -42,7 +42,7 @@ function createWindow() {
   
         mainWindow.loadURL(`data:text/html;charset=UTF-8,${encodeURIComponent(html)}`);
       });
-    }, 5000);
+    }, 1000);
   });
 
   Menu.setApplicationMenu(null);
