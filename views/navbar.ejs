@@ -1,66 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
 </head>
 <body>
   <nav class="navbar">
     <ul>
-      <li><a href="/">Section 1</a></li>
-      <li><a href="/">Section 2</a></li>
-      <li><a href="/">Section 3</a></li>
-      <li><a href="/">Section 4</a></li>
+      <li><a href="#" id="homelink"><i class="fa fa-light fa-rocket"></i> Home</a></li>
+      <li><a href="#" id="modelLink"><i class="fa fa-desktop"></i> 3D Model</a></li>
+      <!-- <li><a href="/"><i class="fa fa-solid fa-code-fork"></i> Flow Charts</a></li>
+      <li><a href="/"><i class="fa fa-solid fa-person"></i> FAQ</a></li> -->
     </ul>
   </nav>
-  <br><br>
-
   <script>
-    const navbarLinks = document.querySelectorAll('.navbar a');
+    const modelLink = document.getElementById('modelLink');
+    const homeLink = document.getElementById('homelink');
 
-    navbarLinks.forEach((link) => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
+    modelLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      require('electron').ipcRenderer.send('navigate-to-3dmodel');
+    });
 
-      });
+    homeLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      require('electron').ipcRenderer.send('navigate-to-home');
     });
   </script>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-      }
-  
-      .navbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background-color: #191d29;
-        padding: 10px 20px;
-        box-sizing: border-box;
-        z-index: 999;
-      }
-  
-      .navbar ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        display: flex;
-      }
-  
-      .navbar li {
-        margin-right: 20px;
-      }
-  
-      .navbar a {
-        text-decoration: none;
-        color: #ffffff;
-        font-size: 18px;
-        transition: color 0.3s ease;
-      }
-  
-      .navbar a:hover {
-        color: #1c1b6d;
-      }
-    </style>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #191d29;
+      padding: 10px 20px;
+      box-sizing: border-box;
+      z-index: 9999;
+    }
+
+    .navbar ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+    }
+
+    .navbar li {
+      margin-right: 20px;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: #ffffff;
+      font-size: 18px;
+      transition: color 0.3s ease;
+      font-weight: bold;
+    }
+
+    .navbar a:hover {
+      color: #5BEFFF;
+    }
+  </style>
 </body>
 </html>

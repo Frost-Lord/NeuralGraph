@@ -3,6 +3,9 @@ const { GenerateGraph, updateGraph } = require('./index.js');
 
 const model = tf.sequential();
 model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
+model.add(tf.layers.dense({ units: 2, inputShape: [2] }));
+model.add(tf.layers.dense({ units: 2, inputShape: [3] }));
+model.add(tf.layers.dense({ units: 1, inputShape: [2] }));
 model.compile({ loss: 'meanSquaredError', optimizer: 'sgd', metrics: ['accuracy'] });
 
 const xs = tf.tensor2d([-1, 0, 1, 2, 3, 4], [6, 1]);

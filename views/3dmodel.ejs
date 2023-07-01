@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>3D Model</title>
+  <%- include('navbar'); %>
+    <br><br>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.5.2/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+</head>
+
+<body>
+  <div class="full-width">
+    <div id="successMessage" style="display: none;"></div>
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <script>
+    window.onload = async function () {
+      try {
+        const model = await tf.loadLayersModel('http://127.0.0.1:3001/model');
+
+        document.getElementById('successMessage').style.display = 'block';
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth - 20, window.innerHeight - 40);
+        document.body.appendChild(renderer.domElement);
+
+        const loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+
+          const layers = model.layers;
+          const spheres = layers.map((layer, i) => {
+            let numUnits;
+            let type;
+            if (layer.layer) {
+              numUnits = layer.layer.units;
+              type = layer.layer.getClassName();
+            } else {
+              numUnits = layer.units;
+              type = layer.getClassName();
+            }
+
+            const textGeometry = new THREE.TextGeometry(`Layer ${i + 1}\nType: ${type}\nUnits: ${numUnits}`, {
+              font: font,
+              size: 0.2,
+              height: 0.01,
+            });
+            const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            textMesh.position.set(i * 2, numUnits / 2 + 1, 0);
+            scene.add(textMesh);
+
+            return Array.from({ length: numUnits }, (_, j) => {
+              const geometry = new THREE.SphereGeometry(0.2, 32, 32);
+              const material = new THREE.MeshBasicMaterial({ color: 0x242556 });
+              const sphere = new THREE.Mesh(geometry, material);
+              sphere.position.set(i * 2, j - numUnits / 2, 0);
+              scene.add(sphere);
+              return sphere;
+            });
+          });
+
+          for (let i = 0; i < layers.length - 1; i++) {
+            for (const sphere1 of spheres[i]) {
+              for (const sphere2 of spheres[i + 1]) {
+                const material = new THREE.LineBasicMaterial({ color: 0xffffff });
+                const points = [sphere1.position, sphere2.position];
+                const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                const line = new THREE.Line(geometry, material);
+                scene.add(line);
+              }
+            }
+          }
+
+          let minX = Infinity,
+            maxX = -Infinity;
+          let minY = Infinity,
+            maxY = -Infinity;
+
+          for (const layerSpheres of spheres) {
+            for (const sphere of layerSpheres) {
+              minX = Math.min(minX, sphere.position.x);
+              maxX = Math.max(maxX, sphere.position.x);
+              minY = Math.min(minY, sphere.position.y);
+              maxY = Math.max(maxY, sphere.position.y);
+            }
+          }
+
+          const centerX = (minX + maxX) / 2;
+          const centerY = (minY + maxY) / 2;
+
+          const radius = Math.max(maxX - minX, maxY - minY) / 2;
+
+          camera.position.x = centerX;
+          camera.position.y = centerY;
+          camera.position.z = radius / Math.tan((camera.fov * Math.PI) / 360);
+
+          const mouse = new THREE.Vector2();
+          const target = new THREE.Vector2();
+          const windowHalf = new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2);
+          const mouseSpeed = 0.018;
+          const zoomSpeed = 0.5;
+          let isDragging = false;
+          let previousMouseX = 0;
+          let previousMouseY = 0;
+          document.addEventListener('mousedown', onDocumentMouseDown, false);
+          document.addEventListener('mouseup', onDocumentMouseUp, false);
+          document.addEventListener('mousemove', onDocumentMouseMove, false);
+          document.addEventListener('wheel', onDocumentMouseWheel, false);
+
+          function onDocumentMouseDown(event) {
+            isDragging = true;
+            previousMouseX = event.clientX;
+            previousMouseY = event.clientY;
+          }
+
+          function onDocumentMouseUp() {
+            isDragging = false;
+          }
+
+          function onDocumentMouseMove(event) {
+            if (isDragging) {
+              const deltaX = event.clientX - previousMouseX;
+              const deltaY = event.clientY - previousMouseY;
+
+              target.x += deltaX * mouseSpeed;
+              target.y += deltaY * mouseSpeed;
+
+              target.y = Math.min(Math.max(target.y, -Math.PI / 2), Math.PI / 2);
+            }
+
+            previousMouseX = event.clientX;
+            previousMouseY = event.clientY;
+          }
+
+
+          function onDocumentMouseWheel(event) {
+            const delta = Math.sign(event.deltaY);
+            camera.position.z += delta * zoomSpeed;
+          }
+
+          const animate = function () {
+            requestAnimationFrame(animate);
+
+            camera.position.x += (target.x - camera.position.x) * 0.3;
+            camera.position.y += (target.y - camera.position.y) * 0.3;
+            camera.lookAt(new THREE.Vector3(centerX, centerY + 2, 0));
+
+            renderer.render(scene, camera);
+          };
+          animate();
+        });
+      } catch (error) {
+        document.getElementById('successMessage').innerText = 'Error: ' + error.message;
+        document.getElementById('successMessage').style.display = 'block';
+        console.error('Error fetching data:', error);
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #090d1e;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .full-width {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 90vw;
+      height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</body>
+
+</html>

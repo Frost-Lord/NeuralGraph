@@ -5,7 +5,6 @@ const appExpress = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
-
 appExpress.use(bodyParser.urlencoded({ extended: false }));
 appExpress.use(bodyParser.json());
 appExpress.use(cors());
@@ -49,15 +48,18 @@ function startElectronApp() {
     });
   });
 }
-function GenerateGraph(model = null) {
+async function GenerateGraph(model = null) {
   if (model) {
-    Data.model = model;
+    try {
+      await model.save('file://./model');
+      Data.model = model;
+      await startElectronApp();
+    } catch (err) {
+      console.error("Error saving model for 3D use: ", err);
+    }
   }
-  return new Promise((resolve) => {
-    startElectronApp();
-    resolve();
-  });
 }
+
 
 function updateGraph(epoch, logs) {
   lossData.push({ x: epoch, y: logs.loss * 100 });
@@ -73,16 +75,12 @@ function updateGraph(epoch, logs) {
     trainingTime = ((endTime - startTime) / 1000).toFixed(2);
   }
 
-  Data = {
-    epoch: epoch,
-    loss: logs.loss,
-    accuracy: logs.acc,
-    lossData: lossData,
-    accuracyData: accuracyData,
-    trainingTime: trainingTime,
-    model: Data.model,
-    ModelInfo: Data.ModelInfo,
-  };
+  Data.epoch = epoch;
+  Data.loss = logs.loss;
+  Data.accuracy = logs.acc;
+  Data.lossData = lossData;
+  Data.accuracyData = accuracyData;
+  Data.trainingTime = trainingTime;
 }
 
 appExpress.get('/', (req, res) => {
@@ -103,16 +101,16 @@ function getLayerVisualization(model) {
   });
   return Promise.all(layerVisualizations);
 }
-function getModelInfo(model) {
+async function getModelInfo(model) {
   const config = model.getConfig();
   const layerVisualizationPromise = getLayerVisualization(model);
-  return layerVisualizationPromise.then(layerVisualizations => {
-    return {
-      config,
-      layerVisualizations,
-    };
-  });
+  const layerVisualizations = await layerVisualizationPromise;
+  return {
+    config,
+    layerVisualizations,
+  };
 }
+
 appExpress.get('/data', async (req, res) => {
   if (Data.model) {
     Data.ModelInfo = await getModelInfo(Data.model);
@@ -120,6 +118,14 @@ appExpress.get('/data', async (req, res) => {
   res.json(Data);
 });
 
+appExpress.get('/model', async (req, res) => {
+  if (Data.model) {
+    res.sendFile(path.resolve(__dirname, './model/model.json'));
+  }
+  else {
+    res.status(404).send('Model not found');
+  }
+});
 
 appExpress.listen(3001, () => { });
 

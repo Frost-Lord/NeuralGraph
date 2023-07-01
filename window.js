@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, nativeImage } = require('electron');
+const { app, BrowserWindow, Menu, nativeImage, ipcMain } = require('electron');
 const path = require('path');
 const ejs = require('ejs');
 let mainWindow;
@@ -13,6 +13,7 @@ function createWindow() {
     show: false,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
     },
     icon: logoImage,
   });
@@ -39,10 +40,10 @@ function createWindow() {
           console.error(err);
           return;
         }
-  
+
         mainWindow.loadURL(`data:text/html;charset=UTF-8,${encodeURIComponent(html)}`);
       });
-    }, 1000);
+    }, 5000);
   });
 
   Menu.setApplicationMenu(null);
@@ -50,4 +51,26 @@ function createWindow() {
 
 app.whenReady().then(() => {
   createWindow();
+});
+
+ipcMain.on('navigate-to-3dmodel', () => {
+  ejs.renderFile(path.join(__dirname, 'views', '3dmodel.ejs'), {}, (err, html) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    mainWindow.loadURL(`data:text/html;charset=UTF-8,${encodeURIComponent(html)}`);
+  });
+});
+
+ipcMain.on('navigate-to-home', () => {
+  ejs.renderFile(path.join(__dirname, 'views', 'index.ejs'), {}, (err, html) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    mainWindow.loadURL(`data:text/html;charset=UTF-8,${encodeURIComponent(html)}`);
+  });
 });
