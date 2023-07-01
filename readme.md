@@ -10,6 +10,12 @@ NeuralGraph is an AI training data visualization tool that helps analyze and int
 - Calculation of average accuracy
 - Feedback message indicating the success or failure of AI training
 - Responsive and intuitive user interface
+- 3D Graph of you model
+- Nested Table to fully understand you model (Full Breakdown)
+
+## Coming soon:
+- Flow Charts
+- FAQ
 
 ## Installation
 
@@ -25,7 +31,7 @@ Follow these steps to set up NeuralGraph:
    ```
 3. Call this just before model.fit:
    ```js
-   GenerateGraph();
+   GenerateGraph(model); //Parse the model directly into this to be able to see a 3D view of you model
    ```
 4. Update your model.fit callback:
    ```js
