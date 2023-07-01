@@ -54,11 +54,11 @@ To run NeuralGraph:
  npm start
 ````
 
-2. Open your web browser and navigate to `http://localhost:3001` to access NeuralGraph.
+2. Open your web browser and navigate to `http://localhost:3001` to access NeuralGraph api.
 
 ## Data Format
 
-NeuralGraph expects training data in a specific format:
+NeuralGraph expects data in a specific format (default):
 
 - `lossData`: An array of loss values corresponding to each epoch.
 - `accuracyData`: An array of accuracy values corresponding to each epoch.
@@ -67,8 +67,8 @@ Example data format:
 
 ```json
 {
-  "lossData": [0.5, 0.4, 0.3, 0.2, 0.1],
-  "accuracyData": [0.6, 0.7, 0.8, 0.9, 0.95]
+  "epoch": [0.5, 0.4, 0.3, 0.2, 0.1],
+  "logs": [0.6, 0.7, 0.8, 0.9, 0.95]
 }
 ```
 
