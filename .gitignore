@@ -128,3 +128,5 @@ dist
 
 # dotenv environment variable file
 .env
+model/model.json
+model/weights.bin
