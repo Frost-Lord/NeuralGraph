@@ -1,11 +1,15 @@
 {
   "name": "neuralgraph",
-  "version": "1.0.9",
+  "version": "1.1.5",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Frost-Lord/NeuralGraph.git"
   },
   "keywords": [
     "neuralgraph",
@@ -15,7 +19,7 @@
     "@tensorflow/tfjs",
     "tfjs"
   ],
-  "author": "",
+  "author": "Frost-Lord",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.4.0",
@@ -27,6 +31,7 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
-    "@tensorflow/tfjs-node": "^4.8.0"
+    "@tensorflow/tfjs-node": "^4.8.0",
+    "@tensorflow/tfjs-node-gpu": "^4.8.0"
   }
 }

@@ -247,6 +247,9 @@
     }
 
     window.onload = async function () {
+      setInterval(() => {
+        window.location.reload(true);
+      }, 5000);
       try {
         const res = await axios.get('http://127.0.0.1:3001/data');
         const data = res.data;
@@ -265,6 +268,7 @@
     body {
       background-color: #090d1e;
       color: #ffffff;
+      font-family: "ge_inspira_mediumregular";
     }
 
     table {

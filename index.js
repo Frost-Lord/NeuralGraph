@@ -26,7 +26,7 @@ let startTime = null;
 
 function startElectronApp() {
   return new Promise((resolve, reject) => {
-    const pathtoWindow = process.env.NODE_ENV === 'development' ? 'node_modules/neuralgraph/window.js' : 'window.js';
+    const pathtoWindow = "node_modules/neuralgraph/window.js"; //"node_modules/neuralgraph/window.js"
     const electronProcess = exec(`electron ${pathtoWindow}`);
 
     electronProcess.stdout.on('data', (data) => {
